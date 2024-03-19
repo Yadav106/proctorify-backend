@@ -96,14 +96,33 @@ def login():
     email = None
     try:
         if not request.is_json:
-            err_msg = ""
+            err_msg = "Missing body in request"
             raise
 
         if request.json is None:
-            err_msg = ""
+            err_msg = "Request body is none"
             raise
 
         username = request.json.get("username")
+        if not username:
+            err_msg = "Username not found in request"
+            raise
+
+        password = request.json.get("password")
+        if not password:
+            err_msg = "Password not found in request"
+            raise
+
+        user = User.query.filter_by(username=username).first()
+        if not user:
+            err_msg = "User not found"
+            raise
+
+        if not user.check_password(password):
+            err_msg = "Invalid credentials"
+            raise
+
+        return set_response({"msg" : "Authenticated"})
     except Exception as ex:
         if not err_msg:
             err_msg = "Error while logging in"
