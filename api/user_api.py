@@ -185,4 +185,22 @@ def login():
         app.logger.error("Error while logging in user %s. Error message : %s. Exception %s", email, err_msg, ex)
         raise InternalError(err_msg);
 
+@user_api.route("/user/get_teams", methods=["POST"])
+def get_team():
+    try:
+        if request.json is None:
+            raise
+        id = request.json.get("id")
+        user = User.query.filter_by(id=id).first()
+        if not user:
+            app.logger.error("can't fidn your user")
+            raise
+        joined_teams = user.joined_teams
 
+        app.logger.info("Joined teams is %s", joined_teams)
+
+        return set_response({"data": "Found teams, check logs"})
+
+    except Exception as ex:
+        app.logger.error("can't get error, %s", ex)
+        raise InternalError(ex)

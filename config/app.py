@@ -12,6 +12,7 @@ from utils.custom_exception import CustomException
 from config.error_handlers import handle_invalid_usage
 
 from api import user_api
+from api import team_api
 
 def create_app(config_obj):
     """
@@ -50,6 +51,7 @@ def create_app(config_obj):
 
 def register_blueprints(app):
     app.register_blueprint(user_api.user_api, url_prefix=API_URL_PREFIX)
+    app.register_blueprint(team_api.team_api, url_prefix=API_URL_PREFIX)
 
 def register_extensions(app):
     cors.init_app(app, max_age=3600)

@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-
+from flask import current_app as app
 from utils.constants import (
     MIN_PASSWORD_LENGTH
 )
@@ -29,7 +29,6 @@ def validate_password_policy(password):
         - at least 1 digit (0-9)
         - at least 1 special character (punctuation)
     """
-    # app.logger.info("Validating password policy")
 
     msg = "At least 1 uppercase character"
     if not any(c.isupper() for c in password):
@@ -49,6 +48,4 @@ def validate_password_policy(password):
         return False, msg
 
     msg = "valid"
-
-    # app.logger.info("Password policy validated [{}]".format(msg))
     return True, msg
