@@ -9,7 +9,7 @@ class ProdConfig:
     if debug == "true" or debug == "True":
         DEBUG = True
 
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + get_current_directory() + '/user_db.db'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + get_current_directory() + '/data.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     CELERY_BROKER_URL = 'redis://{host}:{port}/{db}'.format(

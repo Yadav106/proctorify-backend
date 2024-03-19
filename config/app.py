@@ -10,7 +10,6 @@ from utils.constants import (
 
 from utils.custom_exception import CustomException
 from config.error_handlers import handle_invalid_usage
-from utils.response import set_response
 
 from api import user_api
 

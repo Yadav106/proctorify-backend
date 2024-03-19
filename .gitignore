@@ -18,4 +18,3 @@ migrations/
 vuln-list/
 .bashrc
 *.pid
-celerybeat-schedule
