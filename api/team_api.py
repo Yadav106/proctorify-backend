@@ -56,3 +56,38 @@ def register_team():
         raise InternalError(err_msg);
         
 
+@team_api.route("/team/get_all_teams", methods=["GET"])
+@jwt_required()
+def get_all_teams():
+    err_msg = None
+    try:
+        user_identity = get_jwt_identity()
+        username = user_identity.get('username', None)
+        user = User.query.filter_by(username=username).one_or_none()
+        if not user:
+            err_msg = "User not found"
+            raise
+
+        teams = user.joined_teams
+        
+        ret = []
+        for team in teams:
+            leader = User.query.filter_by(id=team.leader_id).first()
+            if not leader:
+                err_msg = "leader not found for team {}".format(team.name)
+                raise
+
+            ret_obj = {
+                "name" : team.name,
+                "leader" : leader.name
+            }
+
+            ret.append(ret_obj)
+
+        return set_response({"data" : ret})
+    except Exception as ex:
+        if not err_msg:
+            err_msg = "Error while getting all teams"
+        app.logger.error("Error while getting all teams. Error message : %s. Exception %s", err_msg, ex)
+        raise InternalError(err_msg)
+
