@@ -1,6 +1,8 @@
 import os
 from celery import Celery
+# from utils.common import get_current_directory
 from utils.common import get_current_directory
+
 
 class ProdConfig:
     debug = os.environ.get("DEBUG")

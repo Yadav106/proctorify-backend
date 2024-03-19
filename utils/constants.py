@@ -1,1 +1,4 @@
 API_URL_PREFIX = "/proctorify/v1.0"
+
+MIN_PASSWORD_LENGTH = 7
+

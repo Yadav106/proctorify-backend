@@ -5,3 +5,4 @@ Flask-Migrate==2.5.3
 redis==3.4.1
 gunicorn==21.2.0
 celery==5.3.6
+phonenumbers==8.13.24
