@@ -1,6 +1,4 @@
-from sqlalchemy.sql import func
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask import current_app as app
 from config.extensions import db
 
 class User(db.Model):
@@ -16,3 +14,36 @@ class User(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def get_identity(self):
+        user_identity = {
+            "id": self.id,
+            "name": self.name,
+            "email": self.email,
+            "phone_number": self.phone_number
+        }
+
+        return user_identity
+
+    def save(self, commit=True):
+        db.session.add(self)
+
+        if commit:
+            try:
+                db.session.commit()
+            except:
+                db.session.rollback()
+                raise
+
+    def delete(self, commit=True):
+        db.session.delete(self)
+
+        if commit:
+            try:
+                db.session.commit()
+            except:
+                db.session.rollback()
+                raise
+
+    def __repr__(self) -> str:
+        return '<User {}>'.format(self.email)
