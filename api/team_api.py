@@ -37,7 +37,9 @@ def register_team():
             raise
 
         members_list = request.json.get("members", None)
-        members = [User.query.filter_by(id=i).first() for i in members_list]
+        members = [User.query.filter_by(username=i).first() for i in members_list]
+        if user not in members:
+            members.append(user)
 
         team = Team(
             name=name,
