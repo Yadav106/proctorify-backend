@@ -1,0 +1,29 @@
+User Model : {
+  id,
+  name,
+  email,
+  phone_number,
+  username,
+  password_hash,
+
+  teams : [] many-many,
+
+}
+
+Team Model : {
+  id,
+  name,
+  leader,
+  members : [list of users] many-many,
+  meetings : [list of meetings] one-many,
+}
+
+Meeting Model : {
+  id,
+  title,
+  starting_time,
+  notes,
+  attendees : [list of users] many-many,
+  status : [upcoming, ongoing, completed],
+}
+

@@ -9,6 +9,8 @@ class User(db.Model):
     username = db.Column(db.String(100), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
 
+    #TODO: add teams here
+
     def __init__(self, name, email, phone_number, username, password_hash):
         self.name = name
         self.email = email
