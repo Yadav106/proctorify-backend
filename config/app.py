@@ -3,7 +3,7 @@ import logging
 from flask import Flask
 from celery import Celery
 from config.config import ProdConfig
-from config.extensions import db, migrate, cors
+from config.extensions import db, migrate, cors, jwt
 from utils.constants import (
     API_URL_PREFIX
 )
@@ -55,6 +55,7 @@ def register_extensions(app):
     cors.init_app(app, max_age=3600)
     db.init_app(app)
     migrate.init_app(app, db)
+    jwt.init_app(app)
 
 def register_error_handlers(app):
     app.errorhandler(CustomException)(handle_invalid_usage)

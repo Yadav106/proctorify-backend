@@ -106,7 +106,13 @@ def register():
         redis.set(access_jti, 'false', access_expires * 1.2)
         redis.set(refresh_jti, 'false', refresh_expires * 1.2)
 
-        return set_response({msg : "User registered"})
+        return_data = {
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "msg": "New user registered"
+        }
+
+        return set_response(return_data)
 
     except Exception as ex:
         if not err_msg:
@@ -146,7 +152,32 @@ def login():
             err_msg = "Invalid credentials"
             raise
 
-        return set_response({"msg" : "Authenticated"})
+        access_token = create_access_token(identity=user.get_identity())
+        refresh_token = create_refresh_token(identity=user.get_identity())
+
+        access_expires = app.config["JWT_ACCESS_TOKEN_EXPIRES"]
+        refresh_expires = app.config["JWT_REFRESH_TOKEN_EXPIRES"]
+
+        access_jti = get_jti(encoded_token=access_token)
+        refresh_jti = get_jti(encoded_token=refresh_token)
+
+        if access_jti is None:
+            err_msg = "access jti is none"
+            raise
+        if refresh_jti is None:
+            err_msg = "refresh jti is None"
+            raise
+
+        redis.set(access_jti, 'false', access_expires * 1.2)
+        redis.set(refresh_jti, 'false', refresh_expires * 1.2)
+
+        return_data = {
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "msg": "Authenticated"
+        }
+
+        return set_response(return_data)
     except Exception as ex:
         if not err_msg:
             err_msg = "Error while logging in"
