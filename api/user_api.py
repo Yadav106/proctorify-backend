@@ -3,6 +3,13 @@ from flask import current_app as app
 from utils.common import password_policy_check
 from utils.custom_exception import InternalError
 from werkzeug.security import generate_password_hash
+from flask_jwt_extended import (
+    get_jti,
+    jwt_required,
+    create_access_token,
+    create_refresh_token,
+)
+from config.redisconfig import redis
 import phonenumbers
 
 from utils.response import set_response
@@ -81,6 +88,23 @@ def register():
         except Exception as ex:
             err_msg = "Error while saving user"
             raise
+
+        access_token = create_access_token(identity=user.get_identity())
+        refresh_token = create_refresh_token(identity=user.get_identity())
+        access_expires = app.config["JWT_ACCESS_TOKEN_EXPIRES"]
+        refresh_expires = app.config["JWT_REFRESH_TOKEN_EXPIRES"]
+
+        access_jti = get_jti(encoded_token=access_token)
+        refresh_jti = get_jti(encoded_token=refresh_token)
+        if access_jti is None:
+            err_msg = "access jti is none"
+            raise
+        if refresh_jti is None:
+            err_msg = "refresh jti is None"
+            raise
+
+        redis.set(access_jti, 'false', access_expires * 1.2)
+        redis.set(refresh_jti, 'false', refresh_expires * 1.2)
 
         return set_response({msg : "User registered"})
 
