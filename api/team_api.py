@@ -84,10 +84,48 @@ def get_all_teams():
 
             ret.append(ret_obj)
 
-        return set_response({"data" : ret})
+        return set_response({"data" : ret, "msg" : "success"})
     except Exception as ex:
         if not err_msg:
             err_msg = "Error while getting all teams"
         app.logger.error("Error while getting all teams. Error message : %s. Exception %s", err_msg, ex)
         raise InternalError(err_msg)
 
+@team_api.route("/team/start_meeting", methods=['POST'])
+def start_meeting():
+    err_msg = None
+    try:
+        if not request.is_json:
+            err_msg = "Missing body in request"
+            raise
+
+        if request.json is None:
+            err_msg = "Request body is none"
+            raise
+
+        code = request.json.get('code')
+        if not code:
+            err_msg = "code required"
+            raise
+
+        name = request.json.get('name')
+        if not name:
+            err_msg = "team name is required"
+            raise
+
+        team = Team.query.filter_by(name=name).first()
+        if not team:
+            err_msg = "no team found"
+            raise
+
+        team.ongoing = True
+        team.code = code
+        team.save()
+
+        return set_response({"msg" : "meeting started"})
+    except Exception as ex:
+        if not err_msg:
+            err_msg = "Error while creating a meet"
+
+        app.logger.error("Error while creating a meet. Error message : %s. Exception %s", err_msg, ex)
+        raise InternalError(err_msg);

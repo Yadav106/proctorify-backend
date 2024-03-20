@@ -34,4 +34,8 @@ def new_meeting():
             raise
         return set_response({"data" : "nice"})
     except Exception as ex:
-        raise InternalError(err_msg, ex)
+        if not err_msg:
+            err_msg = "Error while creating a meeting"
+
+        app.logger.error("Error while creating a meeting. Error message : %s. Exception %s",  err_msg, ex)
+        raise InternalError(err_msg);

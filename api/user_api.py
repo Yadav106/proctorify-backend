@@ -152,6 +152,8 @@ def login():
             err_msg = "Invalid credentials"
             raise
 
+        name = user.name
+
         access_token = create_access_token(identity=user.get_identity())
         refresh_token = create_refresh_token(identity=user.get_identity())
 
@@ -174,6 +176,7 @@ def login():
         return_data = {
             "access_token": access_token,
             "refresh_token": refresh_token,
+            "name": name,
             "msg": "Authenticated"
         }
 

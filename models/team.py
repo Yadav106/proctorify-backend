@@ -1,11 +1,13 @@
 from config.extensions import db
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, Boolean
 
 class Team(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
     leader_id = db.Column(db.Integer, ForeignKey('user.id'))
     leader = db.relationship('User', backref='teams')
+    code = db.Column(db.String(200), nullable=True)
+    ongoing = db.Column(Boolean, nullable=True)
 
     members = db.relationship('User', secondary='team_members', backref="joined_teams")
 
@@ -13,6 +15,8 @@ class Team(db.Model):
         self.name = name
         self.leader_id = leader_id
         self.members = members or []
+        self.code = None
+        self.ongoing = False
 
     def save(self, commit=True):
         db.session.add(self)
