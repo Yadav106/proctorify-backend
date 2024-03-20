@@ -1,4 +1,4 @@
-from flask import Blueprint, request, request_tearing_down
+from flask import Blueprint, request
 from flask import current_app as app
 from models.user import User
 from utils.custom_exception import InternalError
