@@ -79,7 +79,9 @@ def get_all_teams():
 
             ret_obj = {
                 "name" : team.name,
-                "leader" : leader.name
+                "leader" : leader.name,
+                "ongoing" : team.ongoing,
+                "code" : team.code
             }
 
             ret.append(ret_obj)
